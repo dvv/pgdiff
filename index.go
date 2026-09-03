@@ -239,7 +239,7 @@ func (c *IndexSchema) Change(obj interface{}) {
 		if c.get("constraint_def") == "null" {
 			// c1.constraint does not exist, c2.constraint does, so
 			// Drop constraint
-			fmt.Printf("DROP INDEX %s; -- %s \n", c2.get("index_name"), c2.get("index_def"))
+			fmt.Printf("DROP INDEX %s.%s; -- %s \n", c2.get("schema_name"), c2.get("index_name"), c2.get("index_def"))
 		} else if c2.get("constraint_def") == "null" {
 			// c1.constraint exists, c2.constraint does not, so
 			// Add constraint
@@ -257,7 +257,7 @@ func (c *IndexSchema) Change(obj interface{}) {
 				}
 			} else {
 				// Drop the c2 index, create a copy of the c1 index
-				fmt.Printf("DROP INDEX %s; -- %s \n", c2.get("index_name"), c2.get("index_def"))
+				fmt.Printf("DROP INDEX %s.%s; -- %s \n", c2.get("schema_name"), c2.get("index_name"), c2.get("index_def"))
 			}
 			// WIP
 			//fmt.Printf("ALTER TABLE %s ADD CONSTRAINT %s %s;\n", c.get("table_name"), c.get("index_name"), c.get("constraint_def"))

@@ -82,12 +82,12 @@ func (c *ViewSchema) Compare(obj interface{}) int {
 
 // Add returns SQL to create the view
 func (c ViewSchema) Add() {
-	fmt.Printf("CREATE VIEW %s AS %s \n\n", c.get("viewname"), c.get("definition"))
+	fmt.Printf("CREATE VIEW %s.%s AS %s \n\n", c.get("view_schema"), c.get("viewname"), c.get("definition"))
 }
 
 // Drop returns SQL to drop the view
 func (c ViewSchema) Drop() {
-	fmt.Printf("DROP VIEW %s;\n\n", c.get("viewname"))
+	fmt.Printf("DROP VIEW %s.%s;\n\n", c.get("view_schema"), c.get("viewname"))
 }
 
 // Change handles the case where the names match, but the definition does not
@@ -97,8 +97,8 @@ func (c ViewSchema) Change(obj interface{}) {
 		fmt.Println("Error!!!, Change needs a ViewSchema instance", c2)
 	}
 	if c.get("definition") != c2.get("definition") {
-		fmt.Printf("DROP VIEW %s;\n", c.get("viewname"))
-		fmt.Printf("CREATE VIEW %s AS %s \n\n", c.get("viewname"), c.get("definition"))
+		fmt.Printf("DROP VIEW %s.%s;\n", c.get("view_schema"), c.get("viewname"))
+		fmt.Printf("CREATE VIEW %s.%s AS %s \n\n", c.get("view_schema"), c.get("viewname"), c.get("definition"))
 	}
 }
 
@@ -109,6 +109,7 @@ var (
 func initViewSqlTemplate() *template.Template {
 	sql := `
 	SELECT viewname AS viewname
+                , schemaname as view_schema
 		, definition 
 	FROM pg_views 
 	WHERE  schemaname = '{{$.DbSchema}}'
